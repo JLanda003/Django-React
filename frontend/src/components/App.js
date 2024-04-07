@@ -1,11 +1,18 @@
-import React, { Component } from "react";
-import { render } from "react-dom";
+import React from "react";
+import { createRoot } from "react-dom/client";
+import HomePage from "./HomePage";
 
-const App = () => {
-  return <h1>Probando Codigo de react</h1>
-}
-
-export default App
 
 const appDiv = document.getElementById('app');
-render(<App />, appDiv)
+const root = createRoot(appDiv)
+
+
+const App = () => {
+  return <HomePage />
+}
+
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+)
