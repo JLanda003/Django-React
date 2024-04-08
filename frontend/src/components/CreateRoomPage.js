@@ -1,5 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Button from '@mui/material/Button';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import SaveAsIcon from '@mui/icons-material/SaveAs';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
@@ -11,7 +13,36 @@ import RadioGroup from '@mui/material/RadioGroup';
 import { Link } from 'react-router-dom';
 
 const CreateRoomPage = () => {
-  const defaultVotes = 2;
+  const defaultVotes = 1;
+  const [guestCanPause, setGuestCanPause] = useState(true);
+  const [votesToSkip, setVotesToSkip] = useState(defaultVotes);
+
+  const handleVotesChange = e => {
+    setVotesToSkip(e.target.value);
+  }
+
+  const handleGuestCanPauseChange = e => {
+    setGuestCanPause(e.target.value === 'true' ? true : false)
+  }
+
+  const handleRoomButtonPressed = async() => {
+    const reqOptions ={
+      method: 'POST',
+      headers: { 'Content-Type' : 'application/json' },
+      body: JSON.stringify({
+        votes_to_skip: votesToSkip,
+        guest_can_pause: guestCanPause,
+      }),
+    };
+
+    try {
+      const response = await fetch('/api/create-room', reqOptions);
+      const data = await response.json();
+      console.log(data)
+    } catch (error) {
+      console.error('Error al procesar la solicitud:', error);
+    }
+  }
 
   return (
     <Grid 
@@ -38,7 +69,11 @@ const CreateRoomPage = () => {
               Contol de invitados
             </span>
           </FormHelperText>
-          <RadioGroup row defaultValue="true">
+          <RadioGroup
+            row
+            defaultValue="true"
+            onChange={handleGuestCanPauseChange}
+          >
             <FormControlLabel
               value='true'
               control={<Radio color='primary' />}
@@ -63,11 +98,14 @@ const CreateRoomPage = () => {
           <TextField
             required={true}
             type='number'
+            onChange={handleVotesChange}
             defaultValue={defaultVotes}
             inputProps={{
               min: 1,
               style: { textAlign:"center" },
             }}
+            variant="standard"
+            color="secondary"
           />
           <FormHelperText>
             <span align="center">
@@ -75,6 +113,35 @@ const CreateRoomPage = () => {
             </span>
           </FormHelperText>
         </FormControl>
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        align="center"
+      >
+        <Button
+          color="secondary"
+          variant="outlined"
+          startIcon={<SaveAsIcon />}
+          onClick={handleRoomButtonPressed}
+        >
+          Crear una sala
+        </Button>
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        align="center"
+      >
+        <Button
+          color="secondary"
+          variant="outlined"
+          startIcon={<ArrowBackIcon />}
+          to='/'
+          component={Link}
+        >
+          Regresar
+        </Button>
       </Grid>
     </Grid>
   )
