@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom';
 
-const Room = ({match}) => {
+const Room = () => {
+  const { roomCode } = useParams();
+
   const [roomDetails, setRoomDetails] = useState({
     votesToSkip: 2,
     guestCanPause: false,
     isHost: false,
   })
-
-  const roomCode = match.params.roomCode;
 
   useEffect(() => {
     const getRoomDetails = async () => {
@@ -32,10 +33,21 @@ const Room = ({match}) => {
 
   return (
     <div>
-      <h3>{roomCode}</h3>
-      <p>Votes: {roomDetails.votesToSkip}</p>
-      <p>Guest Can Pause: {roomDetails.guestCanPause.toString()}</p>
-      <p>Host: {roomDetails.isHost.toString()}</p>
+      <h3>Codigo: {roomCode}</h3>
+      <p>Votos requeridos para pasar de cancion: {roomDetails.votesToSkip}
+      </p>
+      <p>Reproducir/Pausar: {
+          roomDetails.guestCanPause.toString() == 'true'
+          ? 'Acesos autorizados'
+          : 'Accesos restringidos'
+        }
+      </p>
+      <p>Anfritión: {
+          roomDetails.isHost.toString() == 'true'
+          ? 'En linea'
+          : 'Desconectado'
+        }
+      </p>
     </div>
   );
 };
