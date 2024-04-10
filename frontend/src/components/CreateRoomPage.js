@@ -10,9 +10,10 @@ import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const CreateRoomPage = () => {
+  const navigate = useNavigate();
   const defaultVotes = 1;
   const [guestCanPause, setGuestCanPause] = useState(true);
   const [votesToSkip, setVotesToSkip] = useState(defaultVotes);
@@ -38,7 +39,7 @@ const CreateRoomPage = () => {
     try {
       const response = await fetch('/api/create-room', reqOptions);
       const data = await response.json();
-      console.log(data)
+      data && data.code ? navigate(`/room/${data.code}`) : undefined;
     } catch (error) {
       console.error('Error al procesar la solicitud:', error);
     }
