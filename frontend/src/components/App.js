@@ -8,7 +8,11 @@ const root = createRoot(appDiv)
 
 
 const App = () => {
-  return <HomePage />
+  return (
+    <div className="center">
+      <HomePage />
+    </div>
+  )
 }
 
 root.render(
